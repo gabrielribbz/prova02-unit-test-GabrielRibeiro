@@ -7,8 +7,8 @@
   "license": "ISC",
   "dependencies": {
     "jest": "^30.4.2",
-    "rimraf": "^6.1.3",
-    "mkdirp": "^3.0.1"
+    "mkdirp": "^3.0.1",
+    "rimraf": "^6.1.3"
   },
   "scripts": {
     "clean": "rimraf ./coverage && mkdirp ./coverage",
@@ -23,5 +23,9 @@
       "lcov",
       "text"
     ]
+  },
+  "devDependencies": {
+    "pactum": "^3.9.1",
+    "supertest": "^7.3.1"
   }
 }
