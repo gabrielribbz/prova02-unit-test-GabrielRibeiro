@@ -9,33 +9,28 @@ on:
     - cron: '0 12 * * *'
 
 jobs:
-  build-and-scan:
-    name: Run Tests and SonarCloud
+  build:
+    name: Run Unit Tests
     runs-on: ubuntu-latest
     steps:
-      # 1. Faz o checkout do código (fetch-depth: 0 é exigido pelo Sonar)
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v7.0.1
+    - name: Use Node.js 22
+      uses: actions/setup-node@v7.0.0
+      with:
+        node-version: 22
+        cache: 'npm'
+    - run: npm install      
+    - run: npm run coverage
+
+  sonarcloud:
+    name: Run SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
-          
-      # 2. Configura o Node.js
-      - name: Use Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'npm'
-          
-      # 3. Instala dependências (Jest, Pactum, etc.)
-      - name: Install Dependencies
-        run: npm install      
-        
-      # 4. Roda os testes e gera a pasta coverage
-      - name: Run Tests and Coverage
-        run: npm run coverage
-
-      # 5. Envia o código e a cobertura para o SonarCloud
-      - name: Run SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+      - name: Official SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v8.2.1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GIHUBT_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
